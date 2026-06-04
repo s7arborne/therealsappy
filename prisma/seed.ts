@@ -17,7 +17,7 @@ async function main() {
     create: {
       id: "default",
       name: "Saptarshi Mondal",
-      logoText: "Saptarshi",
+      logoText: "Sappy",
       tagline: "Builder, thinker, perpetual tinkerer.",
       introMd: "My name is **Saptarshi Mondal** — welcome to my corner of the internet.",
       githubEnabled: false,

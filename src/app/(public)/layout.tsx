@@ -11,7 +11,7 @@ export default async function PublicLayout({ children }: { children: React.React
     getCounts(),
   ]);
 
-  const logoText = settings?.logoText ?? "Saptarshi";
+  const logoText = settings?.logoText ?? "Sappy";
 
   return (
     <>
