@@ -17,7 +17,7 @@ async function main() {
       logoText: "Sappy",
       tagline: "Builder, thinker, perpetual tinkerer.",
       introMd:
-        "My name is **Saptarshi Mondal** — welcome to my corner of the internet. I build software, play too many games, and write notes when something sticks.",
+        "My name is **Saptarshi Mondal** — welcome to my corner of the internet.",
       githubEnabled: true,
       letterboxdEnabled: true,
     },
