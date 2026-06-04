@@ -1,0 +1,95 @@
+// Prisma schema for therealsappy personal site
+// To switch to Postgres for production:
+//   1. Change provider to "postgresql" below
+//   2. Set DATABASE_URL to your Postgres connection string in .env
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  // prod: provider = "postgresql"
+}
+
+model SiteSettings {
+  id               String   @id @default(cuid())
+  name             String   @default("Your Name")
+  logoText         String   @default("Your Name")
+  tagline          String   @default("")
+  introMd          String   @default("")
+  githubEnabled    Boolean  @default(false)
+  letterboxdEnabled Boolean @default(false)
+  updatedAt        DateTime @updatedAt
+}
+
+model Social {
+  id       String  @id @default(cuid())
+  platform String
+  label    String
+  url      String
+  handle   String  @default("")
+  visible  Boolean @default(true)
+  order    Int     @default(0)
+}
+
+model Update {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  iconUrl     String   @default("")
+  link        String   @default("")
+  date        DateTime
+  visible     Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  title       String
+  tag         String  @default("")
+  url         String  @default("")
+  description String  @default("")
+  featured    Boolean @default(false)
+  visible     Boolean @default(true)
+  order       Int     @default(0)
+}
+
+model Game {
+  id       String  @id @default(cuid())
+  title    String
+  platform String  @default("")
+  genre    String  @default("")
+  status   String  @default("Now Playing")
+  coverUrl String  @default("")
+  rating   String  @default("")
+  visible  Boolean @default(true)
+  order    Int     @default(0)
+}
+
+model Watched {
+  id        String   @id @default(cuid())
+  filmTitle String
+  year      String   @default("")
+  rating    String   @default("")
+  note      String   @default("")
+  link      String   @default("")
+  source    String   @default("manual")
+  watchedAt DateTime
+  visible   Boolean  @default(true)
+}
+
+model Thought {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  topic       String    @default("")
+  bodyMd      String
+  isNew       Boolean   @default(false)
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
