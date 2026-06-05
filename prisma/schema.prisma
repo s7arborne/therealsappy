@@ -1,7 +1,4 @@
 // Prisma schema for therealsappy personal site
-// To switch to Postgres for production:
-//   1. Change provider to "postgresql" below
-//   2. Set DATABASE_URL to your Postgres connection string in .env
 
 generator client {
   provider = "prisma-client-js"
@@ -9,8 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  // prod: provider = "postgresql"
+  provider = "postgresql"
 }
 
 model SiteSettings {
