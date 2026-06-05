@@ -2,8 +2,9 @@
 import { useState, useTransition } from "react";
 import { AdminTable } from "@/components/admin/AdminTable";
 import { AdminDialog } from "@/components/admin/AdminDialog";
-import { FieldWrap, Input, Select, CheckboxField, SubmitButton } from "@/components/admin/FormField";
-import { createGame, updateGame, deleteGame, toggleGameVisible } from "@/lib/actions/games";
+import { FieldWrap, Input, Select, ToggleField, SubmitButton } from "@/components/admin/FormField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { createGame, updateGame, deleteGame, toggleGameVisible, reorderGames } from "@/lib/actions/games";
 import { toast } from "sonner";
 import type { Game } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -39,10 +40,12 @@ export function GamesClient({ games }: { games: Game[] }) {
   };
 
   const cols = [
-    { key: "title", header: "Title" },
+    { key: "coverUrl", header: "", render: (r: Game) => r.coverUrl
+      // eslint-disable-next-line @next/next/no-img-element
+      ? <img src={r.coverUrl} alt="" className="admin-thumb" /> : null },
+    { key: "title", header: "Title", render: (r: Game) => <span style={{ fontWeight: 600 }}>{r.title}</span> },
     { key: "platform", header: "Platform" },
-    { key: "status", header: "Status" },
-    { key: "order", header: "Order" },
+    { key: "status", header: "Status", render: (r: Game) => <span style={{ fontSize: 12, padding: "3px 9px", borderRadius: 999, background: "var(--glass)", border: "1px solid var(--glass-bd)" }}>{r.status}</span> },
   ];
 
   const c = editing ?? { id: "", title: "", platform: "", genre: "", status: "Now Playing", coverUrl: "", rating: "", visible: true, order: games.length };
@@ -51,11 +54,12 @@ export function GamesClient({ games }: { games: Game[] }) {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Games</h1>
-        <button onClick={() => setCreating(true)} style={{ padding: "8px 18px", borderRadius: 10, background: "var(--fg)", color: "var(--bg)", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>+ Add Game</button>
+        <button onClick={() => setCreating(true)} className="admin-btn-primary">+ Add Game</button>
       </div>
-      <AdminTable data={games} columns={cols} onEdit={setEditing}
+      <AdminTable data={games} columns={cols} onEdit={setEditing} searchKeys={["title", "platform", "genre", "status"]}
         onDelete={async id => { await deleteGame(id); router.refresh(); }}
-        onToggleVisible={async (id, v) => { await toggleGameVisible(id, v); router.refresh(); }} />
+        onToggleVisible={async (id, v) => { await toggleGameVisible(id, v); router.refresh(); }}
+        onReorder={async ids => { await reorderGames(ids); router.refresh(); }} />
       <AdminDialog title={editing ? "Edit Game" : "New Game"} open={!!editing || creating} onClose={() => { setEditing(null); setCreating(false); }}>
         <form onSubmit={handleSubmit}>
           <FieldWrap label="Title"><Input name="title" defaultValue={c.title} required /></FieldWrap>
@@ -66,11 +70,10 @@ export function GamesClient({ games }: { games: Game[] }) {
               {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
             </Select>
           </FieldWrap>
-          <FieldWrap label="Cover URL"><Input name="coverUrl" defaultValue={c.coverUrl} placeholder="https://..." /></FieldWrap>
+          <FieldWrap label="Cover Image"><ImageUpload name="coverUrl" defaultValue={c.coverUrl} /></FieldWrap>
           <FieldWrap label="Rating"><Input name="rating" defaultValue={c.rating} placeholder="★★★★" /></FieldWrap>
-          <FieldWrap label="Order"><Input name="order" type="number" defaultValue={c.order} /></FieldWrap>
-          <CheckboxField label="Visible" checked={c.visible} onChange={() => {}} />
-          <input name="visible" type="checkbox" defaultChecked={c.visible} style={{ display: "none" }} />
+          <input name="order" type="hidden" defaultValue={c.order} />
+          <ToggleField name="visible" label="Visible" defaultChecked={c.visible} />
           <SubmitButton loading={pending} />
         </form>
       </AdminDialog>

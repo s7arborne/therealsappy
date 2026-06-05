@@ -8,6 +8,7 @@ const ProjectSchema = z.object({
   title: z.string().min(1),
   tag: z.string().default(""),
   url: z.string().default(""),
+  imageUrl: z.string().default(""),
   description: z.string().default(""),
   featured: z.boolean().default(false),
   visible: z.boolean().default(true),
@@ -35,5 +36,11 @@ export async function deleteProject(id: string) {
 export async function toggleProjectVisible(id: string, visible: boolean) {
   await requireAdmin();
   await db.project.update({ where: { id }, data: { visible } });
+  revalidatePath("/");
+}
+
+export async function reorderProjects(ids: string[]) {
+  await requireAdmin();
+  await db.$transaction(ids.map((id, i) => db.project.update({ where: { id }, data: { order: i } })));
   revalidatePath("/");
 }

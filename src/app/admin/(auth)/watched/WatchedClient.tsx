@@ -2,7 +2,7 @@
 import { useState, useTransition } from "react";
 import { AdminTable } from "@/components/admin/AdminTable";
 import { AdminDialog } from "@/components/admin/AdminDialog";
-import { FieldWrap, Input, Textarea, CheckboxField, SubmitButton } from "@/components/admin/FormField";
+import { FieldWrap, Input, Textarea, ToggleField, SubmitButton } from "@/components/admin/FormField";
 import { createWatched, updateWatched, deleteWatched, toggleWatchedVisible } from "@/lib/actions/watched";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -43,16 +43,15 @@ export function WatchedClient({ watched }: { watched: Watched[] }) {
     { key: "watchedAt", header: "Watched", render: (r: Watched) => format(new Date(r.watchedAt), "MMM d, yyyy") },
   ];
 
-  const today = new Date().toISOString().slice(0, 10);
   const c = editing ?? { id: "", filmTitle: "", year: "", rating: "", note: "", link: "", watchedAt: new Date(), visible: true, source: "manual" };
 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Watched</h1>
-        <button onClick={() => setCreating(true)} style={{ padding: "8px 18px", borderRadius: 10, background: "var(--fg)", color: "var(--bg)", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>+ Add Film</button>
+        <button onClick={() => setCreating(true)} className="admin-btn-primary">+ Add Film</button>
       </div>
-      <AdminTable data={watched} columns={cols} onEdit={setEditing}
+      <AdminTable data={watched} columns={cols} onEdit={setEditing} searchKeys={["filmTitle", "year"]}
         onDelete={async id => { await deleteWatched(id); router.refresh(); }}
         onToggleVisible={async (id, v) => { await toggleWatchedVisible(id, v); router.refresh(); }} />
       <AdminDialog title={editing ? "Edit Film" : "New Film"} open={!!editing || creating} onClose={() => { setEditing(null); setCreating(false); }}>
@@ -63,8 +62,7 @@ export function WatchedClient({ watched }: { watched: Watched[] }) {
           <FieldWrap label="Note"><Textarea name="note" defaultValue={c.note} style={{ minHeight: 80 }} /></FieldWrap>
           <FieldWrap label="Link URL"><Input name="link" defaultValue={c.link} /></FieldWrap>
           <FieldWrap label="Watched Date"><Input name="watchedAt" type="date" defaultValue={new Date(c.watchedAt).toISOString().slice(0,10)} required /></FieldWrap>
-          <CheckboxField label="Visible" checked={c.visible} onChange={() => {}} />
-          <input name="visible" type="checkbox" defaultChecked={c.visible} style={{ display: "none" }} />
+          <ToggleField name="visible" label="Visible" defaultChecked={c.visible} />
           <SubmitButton loading={pending} />
         </form>
       </AdminDialog>

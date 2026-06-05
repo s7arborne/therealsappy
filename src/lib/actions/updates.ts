@@ -8,6 +8,7 @@ const UpdateSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
   iconUrl: z.string().default(""),
+  imageUrl: z.string().default(""),
   link: z.string().default(""),
   date: z.string().min(1),
   visible: z.boolean().default(true),
@@ -38,4 +39,10 @@ export async function toggleUpdateVisible(id: string, visible: boolean) {
   await requireAdmin();
   await db.update.update({ where: { id }, data: { visible } });
   revalidatePath("/");
+}
+
+export async function reorderUpdates(ids: string[]) {
+  await requireAdmin();
+  await db.$transaction(ids.map((id, i) => db.update.update({ where: { id }, data: { order: i } })));
+  revalidatePath("/"); revalidatePath("/updates");
 }

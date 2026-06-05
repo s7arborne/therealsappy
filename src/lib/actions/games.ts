@@ -38,3 +38,9 @@ export async function toggleGameVisible(id: string, visible: boolean) {
   await db.game.update({ where: { id }, data: { visible } });
   revalidatePath("/");
 }
+
+export async function reorderGames(ids: string[]) {
+  await requireAdmin();
+  await db.$transaction(ids.map((id, i) => db.game.update({ where: { id }, data: { order: i } })));
+  revalidatePath("/");
+}

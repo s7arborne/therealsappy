@@ -347,6 +347,27 @@ img {
 
 .dash-card:hover { transform: translateY(-3px); border-color: var(--accent); }
 
+/* Image-forward variant: the image fills the card, title sits below. */
+.dash-card-media {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+.dash-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--glass);
+  overflow: hidden;
+}
+.dash-media-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px 16px;
+}
+
 .dash-icon {
   width: 34px;
   height: 34px;
@@ -447,6 +468,118 @@ img {
 .thought-link { transition: background .25s; border: 1px solid transparent !important; }
 .thought-link:hover { background: var(--card) !important; border-color: var(--glass-bd) !important; }
 
-/* ===== ADMIN DASHBOARD CARD HOVER ===== */
-.admin-stat-card { transition: transform .2s; border-radius: 16px; cursor: pointer; }
-.admin-stat-card:hover { transform: translateY(-2px); }
+/* ===== ADMIN UI ===== */
+/* Sidebar nav */
+.admin-nav-link {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 12px; border-radius: 10px;
+  color: var(--muted); font-size: 14px; font-weight: 500;
+  margin-bottom: 2px; text-decoration: none;
+  transition: background .15s, color .15s, box-shadow .15s;
+}
+.admin-nav-link:hover { background: var(--glass); color: var(--fg); }
+.admin-nav-link.active {
+  background: var(--glass); color: var(--fg);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.admin-nav-link svg { flex: none; opacity: .9; }
+
+.admin-signout {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 10px;
+  background: transparent; border: 1px solid var(--line);
+  color: var(--muted); font-size: 13px; cursor: pointer; text-align: left;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.admin-signout:hover { background: var(--glass); color: var(--fg); border-color: var(--glass-bd); }
+
+/* Buttons */
+.admin-btn-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 16px; border-radius: 10px;
+  background: var(--fg); color: var(--bg); border: none;
+  font-weight: 600; font-size: 13px; cursor: pointer;
+  transition: opacity .15s, transform .08s;
+}
+.admin-btn-primary:hover { opacity: .88; }
+.admin-btn-primary:active { transform: translateY(1px); }
+.admin-btn-primary:disabled { opacity: .6; cursor: wait; }
+
+/* Stat cards */
+.admin-stat-card {
+  display: flex; flex-direction: column; gap: 2px;
+  transition: transform .2s, border-color .2s; border-radius: 16px; cursor: pointer;
+}
+.admin-stat-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+/* Table */
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th {
+  padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600;
+  color: var(--muted); text-transform: uppercase; letter-spacing: .06em;
+  border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.admin-row { border-bottom: 1px solid var(--line); transition: background .12s; }
+.admin-row:hover { background: var(--glass); }
+.admin-row td { padding: 12px; font-size: 14px; vertical-align: middle; }
+.admin-row.is-dragging { opacity: .35; }
+.admin-row.is-drag-over td { box-shadow: inset 0 2px 0 var(--accent); }
+
+.admin-drag-handle {
+  cursor: grab; color: var(--faint); display: inline-flex; padding: 2px;
+  border-radius: 6px; touch-action: none; transition: color .12s, background .12s;
+}
+.admin-drag-handle:hover { color: var(--fg); background: var(--glass); }
+.admin-drag-handle:active { cursor: grabbing; }
+
+.admin-icon-btn {
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  padding: 6px; border-radius: 8px; display: inline-flex; align-items: center;
+  transition: background .12s, color .12s;
+}
+.admin-icon-btn:hover { background: var(--glass); color: var(--fg); }
+.admin-icon-btn.danger:hover { color: var(--accent); }
+.admin-icon-btn:disabled { opacity: .5; cursor: default; }
+
+.admin-thumb {
+  width: 40px; height: 40px; border-radius: 8px; object-fit: cover;
+  border: 1px solid var(--glass-bd); background: var(--glass);
+}
+
+/* Search */
+.admin-search-wrap { position: relative; display: inline-flex; align-items: center; }
+.admin-search-wrap svg { position: absolute; left: 11px; color: var(--muted); pointer-events: none; }
+.admin-search {
+  width: 260px; max-width: 100%; padding: 8px 12px 8px 34px; border-radius: 10px;
+  background: var(--glass); border: 1px solid var(--glass-bd); color: var(--fg);
+  font-size: 13px; outline: none; transition: border-color .15s, box-shadow .15s;
+}
+.admin-search:focus { border-color: var(--accent); }
+.admin-empty { padding: 40px 0; text-align: center; color: var(--muted); font-size: 14px; }
+
+/* Form fields */
+.admin-field { transition: border-color .15s, box-shadow .15s; }
+.admin-field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+
+/* Toggle switch */
+.admin-toggle { display: flex; align-items: center; gap: 11px; cursor: pointer; margin-bottom: 16px; user-select: none; }
+.admin-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.admin-toggle-track {
+  width: 38px; height: 22px; border-radius: 999px; flex: none; position: relative;
+  background: var(--glass); border: 1px solid var(--glass-bd);
+  transition: background .2s, border-color .2s;
+}
+.admin-toggle-thumb {
+  position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--muted); transition: transform .2s, background .2s;
+}
+.admin-toggle input:checked + .admin-toggle-track { background: var(--accent); border-color: var(--accent); }
+.admin-toggle input:checked + .admin-toggle-track .admin-toggle-thumb { transform: translateX(16px); background: #fff; }
+.admin-toggle input:focus-visible + .admin-toggle-track { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.admin-toggle-label { font-size: 14px; }
+
+/* Dialog */
+@keyframes admin-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes admin-pop { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }
+.admin-overlay { animation: admin-fade .15s var(--ease); }
+.admin-modal { animation: admin-pop .2s var(--ease); }

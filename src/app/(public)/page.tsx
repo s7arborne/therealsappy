@@ -1,6 +1,5 @@
 import { getSiteSettings, getUpdates, getProjects, getGames, getWatched, getPublishedThoughts } from "@/lib/content";
 import { renderMarkdown } from "@/lib/markdown";
-import Image from "next/image";
 import { format } from "date-fns";
 import { Greeting } from "@/components/public/Greeting";
 import { TipsGrid } from "@/components/public/TipsGrid";
@@ -42,7 +41,8 @@ export default async function HomePage() {
         <div className="dash-grid">
           {updates.slice(0, 4).map(u => (
             <DashCard key={u.id} href={u.link || "/updates"}
-              icon={u.iconUrl || "◆"}
+              image={u.imageUrl || undefined}
+              icon={u.iconUrl || "🕸️"}
               title={u.title}
               subtitle={u.description}
               meta={format(new Date(u.date), "MMM yyyy")} />
@@ -56,7 +56,8 @@ export default async function HomePage() {
         <div className="dash-grid">
           {projects.slice(0, 4).map(p => (
             <DashCard key={p.id} href={p.url || "/projects"}
-              icon={p.title.charAt(0).toUpperCase()}
+              image={p.imageUrl || undefined}
+              icon="🕴️"
               title={p.title}
               subtitle={p.description || undefined}
               meta={p.tag || undefined} />
@@ -70,9 +71,8 @@ export default async function HomePage() {
         <div className="dash-grid">
           {games.slice(0, 4).map(g => (
             <DashCard key={g.id} href="/games"
-              icon={g.coverUrl
-                ? <Image src={g.coverUrl} alt="" width={34} height={34} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                : "🎮"}
+              image={g.coverUrl || undefined}
+              icon="📦"
               title={g.title}
               subtitle={`${g.platform}${g.genre ? ` · ${g.genre}` : ""}`}
               meta={g.status} />
@@ -86,7 +86,8 @@ export default async function HomePage() {
         <div className="dash-grid">
           {thoughts.slice(0, 4).map(t => (
             <DashCard key={t.id} href={`/thoughts/${t.slug}`}
-              icon={t.title.charAt(0).toUpperCase()}
+              image={t.imageUrl || undefined}
+              icon="⭐"
               title={t.title}
               subtitle={t.topic || undefined}
               meta={t.publishedAt ? format(new Date(t.publishedAt), "MMM yyyy") : undefined} />

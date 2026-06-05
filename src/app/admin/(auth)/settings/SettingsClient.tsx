@@ -1,9 +1,9 @@
 "use client";
 import { useState, useTransition } from "react";
-import { FieldWrap, Input, Textarea, CheckboxField, SubmitButton } from "@/components/admin/FormField";
+import { FieldWrap, Input, Textarea, ToggleField, SubmitButton } from "@/components/admin/FormField";
 import { AdminDialog } from "@/components/admin/AdminDialog";
 import { AdminTable } from "@/components/admin/AdminTable";
-import { updateSettings, createSocial, updateSocial, deleteSocial } from "@/lib/actions/settings";
+import { updateSettings, createSocial, updateSocial, deleteSocial, reorderSocials } from "@/lib/actions/settings";
 import { toast } from "sonner";
 import type { SiteSettings, Social } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -55,10 +55,9 @@ export function SettingsClient({ settings, socials }: { settings: SiteSettings |
   };
 
   const socialCols = [
-    { key: "platform", header: "Platform" },
+    { key: "platform", header: "Platform", render: (r: Social) => <span style={{ fontWeight: 600 }}>{r.platform}</span> },
     { key: "label", header: "Label" },
-    { key: "url", header: "URL" },
-    { key: "order", header: "Order" },
+    { key: "url", header: "URL", render: (r: Social) => <a href={r.url} target="_blank" rel="noopener" style={{ color: "var(--accent)" }}>↗</a> },
   ];
 
   const cs = editingSocial ?? { id: "", platform: "", label: "", url: "", handle: "", visible: true, order: socials.length };
@@ -74,10 +73,8 @@ export function SettingsClient({ settings, socials }: { settings: SiteSettings |
           <FieldWrap label="Logo Text (Caveat font)"><Input name="logoText" defaultValue={s.logoText} required /></FieldWrap>
           <FieldWrap label="Tagline"><Input name="tagline" defaultValue={s.tagline} /></FieldWrap>
           <FieldWrap label="Intro (Markdown)"><Textarea name="introMd" defaultValue={s.introMd} style={{ minHeight: 100 }} /></FieldWrap>
-          <CheckboxField label="GitHub integration enabled" checked={s.githubEnabled} onChange={() => {}} />
-          <input name="githubEnabled" type="checkbox" defaultChecked={s.githubEnabled} style={{ display: "none" }} />
-          <CheckboxField label="Letterboxd integration enabled" checked={s.letterboxdEnabled} onChange={() => {}} />
-          <input name="letterboxdEnabled" type="checkbox" defaultChecked={s.letterboxdEnabled} style={{ display: "none" }} />
+          <ToggleField name="githubEnabled" label="GitHub integration enabled" defaultChecked={s.githubEnabled} />
+          <ToggleField name="letterboxdEnabled" label="Letterboxd integration enabled" defaultChecked={s.letterboxdEnabled} />
           <SubmitButton loading={pending} />
         </form>
       </section>
@@ -85,20 +82,20 @@ export function SettingsClient({ settings, socials }: { settings: SiteSettings |
       <section>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <h2 style={{ fontSize: 18, fontWeight: 600 }}>Social Links</h2>
-          <button onClick={() => setCreatingS(true)} style={{ padding: "7px 14px", borderRadius: 9, background: "var(--fg)", color: "var(--bg)", border: "none", fontWeight: 600, fontSize: 12, cursor: "pointer" }}>+ Add Social</button>
+          <button onClick={() => setCreatingS(true)} className="admin-btn-primary">+ Add Social</button>
         </div>
-        <AdminTable data={socials} columns={socialCols} onEdit={setEditingSocial}
+        <AdminTable data={socials} columns={socialCols} onEdit={setEditingSocial} searchKeys={["platform", "label"]}
           onDelete={async id => { await deleteSocial(id); router.refresh(); }}
-          onToggleVisible={async (id, v) => { await updateSocial(id, { ...socials.find(s => s.id === id)!, visible: v }); router.refresh(); }} />
+          onToggleVisible={async (id, v) => { await updateSocial(id, { ...socials.find(s => s.id === id)!, visible: v }); router.refresh(); }}
+          onReorder={async ids => { await reorderSocials(ids); router.refresh(); }} />
         <AdminDialog title={editingSocial ? "Edit Social" : "Add Social"} open={!!editingSocial || creatingS} onClose={() => { setEditingSocial(null); setCreatingS(false); }}>
           <form onSubmit={handleSocialSubmit}>
             <FieldWrap label="Platform (e.g. twitter, github, email)"><Input name="platform" defaultValue={cs.platform} required /></FieldWrap>
             <FieldWrap label="Label"><Input name="label" defaultValue={cs.label} required /></FieldWrap>
             <FieldWrap label="URL"><Input name="url" defaultValue={cs.url} required /></FieldWrap>
             <FieldWrap label="Handle"><Input name="handle" defaultValue={cs.handle} /></FieldWrap>
-            <FieldWrap label="Order"><Input name="order" type="number" defaultValue={cs.order} /></FieldWrap>
-            <CheckboxField label="Visible" checked={cs.visible} onChange={() => {}} />
-            <input name="visible" type="checkbox" defaultChecked={cs.visible} style={{ display: "none" }} />
+            <input name="order" type="hidden" defaultValue={cs.order} />
+            <ToggleField name="visible" label="Visible" defaultChecked={cs.visible} />
             <SubmitButton loading={pending} />
           </form>
         </AdminDialog>

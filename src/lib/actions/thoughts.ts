@@ -8,6 +8,7 @@ const ThoughtSchema = z.object({
   slug: z.string().min(1),
   title: z.string().min(1),
   topic: z.string().default(""),
+  imageUrl: z.string().default(""),
   bodyMd: z.string().min(1),
   isNew: z.boolean().default(false),
   published: z.boolean().default(false),

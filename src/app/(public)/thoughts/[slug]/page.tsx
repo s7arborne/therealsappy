@@ -2,6 +2,7 @@ import { getThought, getPublishedThoughts } from "@/lib/content";
 import { renderMarkdown } from "@/lib/markdown";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { format } from "date-fns";
 import type { Metadata } from "next";
 
@@ -39,6 +40,10 @@ export default async function ThoughtPage({ params }: { params: Promise<{ slug: 
       <h1 style={{ fontSize: "clamp(28px,5vw,56px)", fontWeight: 700, letterSpacing: "-.03em", lineHeight: 1.1, marginBottom: 32 }}>
         {thought.title}
       </h1>
+      {thought.imageUrl && (
+        <Image src={thought.imageUrl} alt={thought.title} width={1200} height={630}
+          style={{ width: "100%", height: "auto", borderRadius: 14, marginBottom: 32, border: "1px solid var(--glass-bd)" }} />
+      )}
       <div
         className="prose-content"
         style={{ color: "var(--muted)", maxWidth: "65ch", lineHeight: 1.75 }}

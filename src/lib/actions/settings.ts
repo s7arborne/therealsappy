@@ -45,3 +45,9 @@ export async function deleteSocial(id: string) {
   await db.social.delete({ where: { id } });
   revalidatePath("/");
 }
+
+export async function reorderSocials(ids: string[]) {
+  await requireAdmin();
+  await db.$transaction(ids.map((id, i) => db.social.update({ where: { id }, data: { order: i } })));
+  revalidatePath("/");
+}

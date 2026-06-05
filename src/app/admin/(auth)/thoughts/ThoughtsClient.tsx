@@ -2,7 +2,8 @@
 import { useState, useTransition } from "react";
 import { AdminTable } from "@/components/admin/AdminTable";
 import { AdminDialog } from "@/components/admin/AdminDialog";
-import { FieldWrap, Input, Textarea, CheckboxField, SubmitButton } from "@/components/admin/FormField";
+import { FieldWrap, Input, Textarea, ToggleField, SubmitButton } from "@/components/admin/FormField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import { createThought, updateThought, deleteThought } from "@/lib/actions/thoughts";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -27,6 +28,7 @@ export function ThoughtsClient({ thoughts }: { thoughts: Thought[] }) {
       slug: fd.get("slug") as string,
       title: fd.get("title") as string,
       topic: fd.get("topic") as string || "",
+      imageUrl: fd.get("imageUrl") as string || "",
       bodyMd: fd.get("bodyMd") as string,
       isNew: fd.get("isNew") === "on",
       published: fd.get("published") === "on",
@@ -49,15 +51,15 @@ export function ThoughtsClient({ thoughts }: { thoughts: Thought[] }) {
   ];
 
   const today = new Date().toISOString().slice(0, 10);
-  const c = editing ?? { id: "", slug: "", title: "", topic: "", bodyMd: "", isNew: false, published: false, publishedAt: null, createdAt: new Date(), updatedAt: new Date() };
+  const c = editing ?? { id: "", slug: "", title: "", topic: "", imageUrl: "", bodyMd: "", isNew: false, published: false, publishedAt: null, createdAt: new Date(), updatedAt: new Date() };
 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700 }}>Thoughts</h1>
-        <button onClick={() => { setCreating(true); setSlugVal(""); }} style={{ padding: "8px 18px", borderRadius: 10, background: "var(--fg)", color: "var(--bg)", border: "none", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>+ New Thought</button>
+        <button onClick={() => { setCreating(true); setSlugVal(""); }} className="admin-btn-primary">+ New Thought</button>
       </div>
-      <AdminTable data={thoughts} columns={cols} onEdit={r => { setEditing(r); setSlugVal(r.slug); }}
+      <AdminTable data={thoughts} columns={cols} onEdit={r => { setEditing(r); setSlugVal(r.slug); }} searchKeys={["title", "topic"]}
         onDelete={async id => { await deleteThought(id); router.refresh(); }} />
       <AdminDialog title={editing ? "Edit Thought" : "New Thought"} open={!!editing || creating} onClose={() => { setEditing(null); setCreating(false); setSlugVal(""); }}>
         <form onSubmit={handleSubmit}>
@@ -68,12 +70,11 @@ export function ThoughtsClient({ thoughts }: { thoughts: Thought[] }) {
             <Input name="slug" value={editing ? slugVal || c.slug : slugVal} onChange={e => setSlugVal(e.target.value)} required />
           </FieldWrap>
           <FieldWrap label="Topic"><Input name="topic" defaultValue={c.topic} placeholder="Craft, Tech, Life…" /></FieldWrap>
+          <FieldWrap label="Cover Image"><ImageUpload name="imageUrl" defaultValue={c.imageUrl} /></FieldWrap>
           <FieldWrap label="Body (Markdown)"><Textarea name="bodyMd" defaultValue={c.bodyMd} style={{ minHeight: 200 }} required /></FieldWrap>
           <FieldWrap label="Publish Date"><Input name="publishedAt" type="date" defaultValue={c.publishedAt ? new Date(c.publishedAt).toISOString().slice(0,10) : today} /></FieldWrap>
-          <CheckboxField label="Mark as New" checked={c.isNew} onChange={() => {}} />
-          <input name="isNew" type="checkbox" defaultChecked={c.isNew} style={{ display: "none" }} />
-          <CheckboxField label="Published (live)" checked={c.published} onChange={() => {}} />
-          <input name="published" type="checkbox" defaultChecked={c.published} style={{ display: "none" }} />
+          <ToggleField name="isNew" label="Mark as New" defaultChecked={c.isNew} />
+          <ToggleField name="published" label="Published (live)" defaultChecked={c.published} />
           <SubmitButton loading={pending} />
         </form>
       </AdminDialog>

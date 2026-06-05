@@ -18,7 +18,7 @@ export default async function GamesPage() {
           description={`${g.platform}${g.genre ? ` · ${g.genre}` : ""}`}
           thumb={g.coverUrl
             ? <Image src={g.coverUrl} alt="" width={56} height={74} style={{ borderRadius: 6, objectFit: "cover" }} />
-            : <span style={{ width: 56, height: 74, borderRadius: 6, display: "grid", placeItems: "center", background: "var(--glass)", border: "1px solid var(--glass-bd)", fontSize: 22 }}>🎮</span>} />
+            : <span style={{ width: 56, height: 74, borderRadius: 6, display: "grid", placeItems: "center", background: "var(--glass)", border: "1px solid var(--glass-bd)", fontSize: 22 }}>📦</span>} />
       ))}
     </SectionShell>
   );

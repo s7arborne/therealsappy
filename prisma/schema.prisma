@@ -35,6 +35,7 @@ model Update {
   title       String
   description String
   iconUrl     String   @default("")
+  imageUrl    String   @default("")
   link        String   @default("")
   date        DateTime
   visible     Boolean  @default(true)
@@ -47,6 +48,7 @@ model Project {
   title       String
   tag         String  @default("")
   url         String  @default("")
+  imageUrl    String  @default("")
   description String  @default("")
   featured    Boolean @default(false)
   visible     Boolean @default(true)
@@ -82,6 +84,7 @@ model Thought {
   slug        String    @unique
   title       String
   topic       String    @default("")
+  imageUrl    String    @default("")
   bodyMd      String
   isNew       Boolean   @default(false)
   published   Boolean   @default(false)
