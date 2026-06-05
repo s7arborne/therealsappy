@@ -21,13 +21,18 @@ const caveat = Caveat({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL ?? "http://localhost:3000"),
-  title: { default: "Saptarshi Mondal", template: "%s · Saptarshi Mondal" },
-  description: "Builder, thinker, perpetual tinkerer.",
+  title: { default: "Sappy", template: "%s · s7arborne" },
+  description: "Kept you waiting huh?",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "Saptarshi Mondal",
+    siteName: "therealsappy",
+    images: [
+      {
+        url: "https://ob9yjbmfuxrcmnyz.public.blob.vercel-storage.com/uploads/Drive-movie-guide-sbK7Z6UEDADAhRDIV5hECchaTUNDYi.jpeg",
+      },
+    ],
   },
 };
 

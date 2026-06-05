@@ -13,21 +13,21 @@ async function main() {
   await db.siteSettings.upsert({
     where: { id: "default" },
     update: {
-      name: "Saptarshi Mondal",
+      name: "Sappy",
       logoText: "Sappy",
-      tagline: "Builder, thinker, perpetual tinkerer.",
+      tagline: "Kept you waiting huh?",
       introMd:
-        "My name is **Saptarshi Mondal** — welcome to my corner of the internet.",
+        "My name is **Sappy** — welcome to my corner of the internet.",
       githubEnabled: true,
       letterboxdEnabled: true,
     },
     create: {
       id: "default",
-      name: "Saptarshi Mondal",
+      name: "Sappy",
       logoText: "Sappy",
-      tagline: "Builder, thinker, perpetual tinkerer.",
+      tagline: "Kept you waiting huh?",
       introMd:
-        "My name is **Saptarshi Mondal** — welcome to my corner of the internet. I build software, play too many games, and write notes when something sticks.",
+        "My name is **Sappy** — welcome to my corner of the internet.",
       githubEnabled: true,
       letterboxdEnabled: true,
     },

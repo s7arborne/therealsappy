@@ -12,8 +12,8 @@ export const revalidate = 60;
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSiteSettings();
   return {
-    title: s?.name ?? "Saptarshi Mondal",
-    description: s?.tagline ?? "Builder, thinker, perpetual tinkerer.",
+    title: s?.name ?? "s7arborne",
+    description: s?.tagline ?? "Kept you waiting huh?",
   };
 }
 
@@ -28,7 +28,7 @@ export default async function HomePage() {
   ]);
 
   const introHtml = settings?.introMd ? renderMarkdown(settings.introMd) : "";
-  const name = settings?.name ?? "Saptarshi Mondal";
+  const name = settings?.name ?? "Sappy";
 
   return (
     <>
