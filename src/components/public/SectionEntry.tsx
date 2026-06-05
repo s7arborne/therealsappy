@@ -11,15 +11,17 @@ interface SectionEntryProps {
 }
 
 export function SectionEntry({ meta, title, description, tag, href, thumb }: SectionEntryProps) {
-  const body = (
-    <div className="entry-body">
-      {thumb && <div className="entry-thumb">{thumb}</div>}
-      <div className="entry-content">
-        <div className="entry-head">
-          <h3 className="entry-title">{title}</h3>
-          {tag && <span className="entry-tag">{tag}</span>}
+  const card = (
+    <div className="entry-card">
+      <div className="entry-body">
+        {thumb && <div className="entry-thumb">{thumb}</div>}
+        <div className="entry-content">
+          <div className="entry-head">
+            <h3 className="entry-title">{title}</h3>
+            {tag && <span className="entry-tag">{tag}</span>}
+          </div>
+          {description && <p className="entry-desc">{description}</p>}
         </div>
-        {description && <p className="entry-desc">{description}</p>}
       </div>
     </div>
   );
@@ -29,11 +31,11 @@ export function SectionEntry({ meta, title, description, tag, href, thumb }: Sec
       <div className="entry-meta">{meta}</div>
       {href ? (
         href.startsWith("/") ? (
-          <Link href={href} className="entry-link">{body}</Link>
+          <Link href={href} className="entry-link">{card}</Link>
         ) : (
-          <a href={href} target="_blank" rel="noopener noreferrer" className="entry-link">{body}</a>
+          <a href={href} target="_blank" rel="noopener noreferrer" className="entry-link">{card}</a>
         )
-      ) : body}
+      ) : card}
     </div>
   );
 }

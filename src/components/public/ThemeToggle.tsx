@@ -1,11 +1,14 @@
 "use client";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const subscribe = () => () => {};
 
 export function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const { theme, setTheme } = useTheme();
+  // false on the server + initial hydration render, true afterwards — without a
+  // setState-in-effect. Prevents theme-dependent UI from mismatching on hydrate.
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false);
 
   const modes = [
     { key: "light", label: "Light" },

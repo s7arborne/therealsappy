@@ -1,5 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
+
+// Stable no-op subscribe; the greeting never changes after mount within a visit.
+const subscribe = () => () => {};
 
 // Fun, nerd-themed late-night greetings — one is picked per calendar date
 // (stable all day, changes from one date to the next), not re-randomized on
@@ -70,8 +73,9 @@ function getGreeting() {
 }
 
 export function Greeting({ introHtml }: { introHtml: string }) {
-  const [greeting, setGreeting] = useState("Good morning");
-  useEffect(() => { setGreeting(getGreeting()); }, []);
+  // Server renders "Good morning"; client swaps to the time-aware greeting after
+  // hydration without a setState-in-effect (avoids hydration mismatch + lint).
+  const greeting = useSyncExternalStore(subscribe, getGreeting, () => "Good morning");
 
   // Use the greeting's own trailing punctuation as the accent mark
   // (e.g. "still awake?"), defaulting to a period when there is none.
